@@ -40,12 +40,12 @@ public class UserRepository {
     public User checkUser(String username, String password) {
         try {
             EntityManager em = emf.createEntityManager();
-            TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.username = :username AND u.password = :password", User.class);
-            query.setParameter("username", username);
-            query.setParameter("password", password);
+            TypedQuery<User> typedQuery = em.createQuery("SELECT u FROM User u WHERE u.username = :username AND u.password = :password", User.class);
+            typedQuery.setParameter("username", username);
+            typedQuery.setParameter("password", password);
 
-            return query.getSingleResult();
-        }catch(NoResultException nre){
+            return typedQuery.getSingleResult();
+        } catch (NoResultException nre) {
             return null;
         }
     }
