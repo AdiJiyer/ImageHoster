@@ -49,7 +49,7 @@ public class ImageController {
     public String showImage(@PathVariable("title") String title, Model model) {
         Image image = imageService.getImageByTitle(title);
         model.addAttribute("image", image);
-        model.addAttribute("tags",image.getTags());
+        model.addAttribute("tags", image.getTags());
         return "images/image";
     }
 
@@ -97,7 +97,7 @@ public class ImageController {
 
         String tags = convertTagsToString(image.getTags());
         model.addAttribute("image", image);
-        model.addAttribute("tags",tags);
+        model.addAttribute("tags", tags);
         return "images/edit";
     }
 
@@ -113,7 +113,7 @@ public class ImageController {
     //The method also receives tags parameter which is a string of all the tags separated by a comma using the annotation @RequestParam
     //The method converts the string to a list of all the tags using findOrCreateTags() method and sets the tags attribute of an image as a list of all the tags
     @RequestMapping(value = "/editImage", method = RequestMethod.PUT)
-    public String editImageSubmit(@RequestParam("file") MultipartFile file, @RequestParam("imageId") Integer imageId,@RequestParam("tags") String tags, Image updatedImage, HttpSession session) throws IOException {
+    public String editImageSubmit(@RequestParam("file") MultipartFile file, @RequestParam("imageId") Integer imageId, @RequestParam("tags") String tags, Image updatedImage, HttpSession session) throws IOException {
 
         Image image = imageService.getImage(imageId);
         String updatedImageData = convertUploadedFileToBase64(file);
@@ -171,6 +171,10 @@ public class ImageController {
         return tags;
     }
 
+
+    //The method receives the list of all tags
+    //Converts the list of all tags to a single string containing all the tags separated by a comma
+    //Returns the string
     private String convertTagsToString(List<Tag> tags) {
         StringBuilder tagString = new StringBuilder();
 

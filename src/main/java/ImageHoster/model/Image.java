@@ -54,20 +54,21 @@ public class Image {
     public Image() {
     }
 
-    public Image(int i, String s, String s1, Date date) {
-        this.id = i;
-        this.title = s;
-        this.imageFile = s1;
+    public Image(int id, String title, String imageFile, Date date) {
+        this.id = id;
+        this.title = title;
+        this.imageFile = imageFile;
         this.date = date;
     }
 
-    public Image(int i, String s, String s1, String s2, Date date) {
-        this.id = i;
-        this.title = s;
-        this.imageFile = s1;
-        this.description = s2;
+    public Image(int id, String title, String imageFile, String description, Date date) {
+        this.id = id;
+        this.title = title;
+        this.imageFile = imageFile;
+        this.description = description;
         this.date = date;
     }
+
 
 
     public Integer getId() {
