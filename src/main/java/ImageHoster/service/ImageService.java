@@ -1,5 +1,6 @@
 package ImageHoster.service;
 
+import ImageHoster.model.Comment;
 import ImageHoster.model.Image;
 import ImageHoster.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +32,12 @@ public class ImageService {
         return imageRepository.getImageByTitle(title);
     }
 
+
     //The method calls the getImage() method in the Repository and passes the id of the image to be fetched
     public Image getImage(Integer imageId) {
         return imageRepository.getImage(imageId);
     }
+
 
     //The method calls the updateImage() method in the Repository and passes the Image to be updated in the database
     public void updateImage(Image updatedImage) {
@@ -44,6 +47,10 @@ public class ImageService {
     //The method calls the deleteImage() method in the Repository and passes the Image id of the image to be deleted in the database
     public void deleteImage(Integer imageId) {
         imageRepository.deleteImage(imageId);
+    }
+
+    public void addComment(Comment comment) {
+        imageRepository.addComment(comment);
     }
 
 }

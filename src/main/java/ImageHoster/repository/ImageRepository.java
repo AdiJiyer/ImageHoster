@@ -1,5 +1,6 @@
 package ImageHoster.repository;
 
+import ImageHoster.model.Comment;
 import ImageHoster.model.Image;
 import org.springframework.stereotype.Repository;
 
@@ -64,10 +65,16 @@ public class ImageRepository {
     //Executes JPQL query to fetch the image from the database with corresponding id
     //Returns the image fetched from the database
     public Image getImage(Integer imageId) {
-        EntityManager em = emf.createEntityManager();
-        TypedQuery<Image> typedQuery = em.createQuery("SELECT i from Image i where i.id =:imageId", Image.class).setParameter("imageId", imageId);
-        Image image = typedQuery.getSingleResult();
-        return image;
+        try{
+            EntityManager em = emf.createEntityManager();
+            TypedQuery<Image> typedQuery = em.createQuery("SELECT i from Image i where i.id =:imageId", Image.class).setParameter("imageId", imageId);
+            Image image = typedQuery.getSingleResult();
+            return image;
+        }
+        catch (NoResultException nre) {
+            return null;
+        }
+
     }
 
     //The method receives the Image object to be updated in the database
@@ -104,6 +111,19 @@ public class ImageRepository {
             transaction.begin();
             Image image = em.find(Image.class, imageId);
             em.remove(image);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+        }
+    }
+    // Add Comment to db
+    public void addComment (Comment comment) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+
+        try {
+            transaction.begin();
+            em.persist(comment);
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
