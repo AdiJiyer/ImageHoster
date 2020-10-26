@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 @Controller
@@ -40,9 +41,19 @@ public class UserController {
     //This controller method is called when the request pattern is of type 'users/registration' and also the incoming request is of POST type
     //This method calls the business logic and after the user record is persisted in the database, directs to login page
     @RequestMapping(value = "users/registration", method = RequestMethod.POST)
-    public String registerUser(User user) {
-        userService.registerUser(user);
-        return "redirect:/users/login";
+    public String registerUser(User user, Model model) {
+
+        model.addAttribute("User", user);
+        String regex = "^(?=.*[a-zA-Z])(?=.*?\\d)" +
+                "(?=.*?[`~!@#$%^&*()\\-_=+\\\\|\\[{\\]};:'\",<.>/?]).*$";
+        if(!Pattern.compile(regex).matcher(user.getPassword()).matches()) {
+            model.addAttribute("passwordTypeError", "Password must contain atleast 1 alphabet, 1 number & 1 special character");
+            return "users/registration";
+        }
+        else {
+            userService.registerUser(user);
+            return "redirect:/users/login";
+        }
     }
 
     //This controller method is called when the request pattern is of type 'users/login'
