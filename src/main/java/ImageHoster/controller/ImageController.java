@@ -1,5 +1,6 @@
 package ImageHoster.controller;
 
+import ImageHoster.model.Comment;
 import ImageHoster.model.Image;
 import ImageHoster.model.Tag;
 import ImageHoster.model.User;
@@ -50,7 +51,22 @@ public class ImageController {
         Image image = imageService.getImage(imageId);
         model.addAttribute("image", image);
         model.addAttribute("tags", image.getTags());
+        model.addAttribute("comments", image.getComments());
         return "images/image";
+    }
+
+    @RequestMapping(value = "/image/{imageId}/{title}/comments", method = RequestMethod.POST)
+    public String postComment(@PathVariable("imageId") Integer imageId, @PathVariable("title") String title, @RequestParam("comment") String comment, Model model, HttpSession session) {
+        Image image = imageService.getImage(imageId);
+        User user = (User) session.getAttribute("loggeduser");
+
+        Comment cm = new Comment();
+        cm.setImage(image);
+        cm.setText(comment);
+        cm.setCreatedDate(new Date());
+        cm.setUser(user);
+        imageService.addComment(cm);
+        return "redirect:/images/" + image.getId() + "/" + image.getTitle();
     }
 
     //This controller method is called when the request pattern is of type 'images/upload'
@@ -97,8 +113,8 @@ public class ImageController {
         User logInUser = (User) session.getAttribute("loggeduser");
         String tags = convertTagsToString(image.getTags());
         model.addAttribute("image", image);
-        //model.addAttribute("tags", tags);
-        if(!image.getUser().getUsername().equals(logInUser.getUsername())){
+        model.addAttribute("tags", tags);
+        if (!image.getUser().getUsername().equals(logInUser.getUsername())) {
             model.addAttribute("editError", "Only the owner of the image can edit the image");
             return "images/image";
         }
@@ -151,9 +167,10 @@ public class ImageController {
             imageService.deleteImage(imageId);
             return "redirect:/images";
         }
+        String tags = convertTagsToString(image.getTags());
+        model.addAttribute("tags", tags);
         model.addAttribute("image", image);
         model.addAttribute("deleteError", "Only the owner of the image can edit the image");
-//        model.addAttribute("tags", tags);
         return "images/image";
     }
 
@@ -188,9 +205,12 @@ public class ImageController {
     //Converts the list of all tags to a single string containing all the tags separated by a comma
     //Returns the string
     private String convertTagsToString(List<Tag> tags) {
+        //WI added to avoid Array out of bounds error when tags list is empty
+        if (tags.size() == 0)
+            return "";
         StringBuilder tagString = new StringBuilder();
 
-        for (int i = 0; i <= tags.size() - 2; i++) {
+        for (int i = 0; i < tags.size()-2 ; i++) {
             tagString.append(tags.get(i).getName()).append(",");
         }
 
