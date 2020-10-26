@@ -55,20 +55,6 @@ public class ImageController {
         return "images/image";
     }
 
-    @RequestMapping(value = "/image/{imageId}/{title}/comments", method = RequestMethod.POST)
-    public String postComment(@PathVariable("imageId") Integer imageId, @PathVariable("title") String title, @RequestParam("comment") String comment, Model model, HttpSession session) {
-        Image image = imageService.getImage(imageId);
-        User user = (User) session.getAttribute("loggeduser");
-
-        Comment cm = new Comment();
-        cm.setImage(image);
-        cm.setText(comment);
-        cm.setCreatedDate(new Date());
-        cm.setUser(user);
-        imageService.addComment(cm);
-        return "redirect:/images/" + image.getId() + "/" + image.getTitle();
-    }
-
     //This controller method is called when the request pattern is of type 'images/upload'
     //The method returns 'images/upload.html' file
     @RequestMapping("/images/upload")

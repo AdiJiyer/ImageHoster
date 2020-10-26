@@ -49,8 +49,5 @@ public class ImageService {
         imageRepository.deleteImage(imageId);
     }
 
-    public void addComment(Comment comment) {
-        imageRepository.addComment(comment);
-    }
 
 }
